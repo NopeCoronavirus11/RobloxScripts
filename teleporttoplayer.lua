@@ -38,16 +38,26 @@ TeleportButton.TextSize = 14.000
 
 -- Scripts:
 
-local function XEPKJ_fake_script() -- ScreenGui.Script 
+local function QDYFTNX_fake_script() -- ScreenGui.Script 
 	local script = Instance.new('Script', ScreenGui)
 
 	local teleportButton = script.Parent.TeleportButton -- Assume this script is in a LocalScript inside the ScreenGui
 	local nameInputBox = script.Parent.NameInputBox -- Reference to the TextBox
 	local player = game.Players.LocalPlayer -- The player who clicked the button
 	
+	-- Function to find a player by either username or display name
+	local function findPlayerByName(inputName)
+		for _, targetPlayer in ipairs(game.Players:GetPlayers()) do
+			if targetPlayer.Name:lower() == inputName:lower() or targetPlayer.DisplayName:lower() == inputName:lower() then
+				return targetPlayer
+			end
+		end
+		return nil -- Return nil if no match is found
+	end
+	
 	-- Function to teleport player to the target player
 	local function teleportToPlayer(targetPlayerName)
-		local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+		local targetPlayer = findPlayerByName(targetPlayerName)
 	
 		if targetPlayer and targetPlayer.Character and player.Character then
 			local targetPosition = targetPlayer.Character.PrimaryPart.Position
@@ -66,6 +76,5 @@ local function XEPKJ_fake_script() -- ScreenGui.Script
 			print("Please enter a valid player name.")
 		end
 	end)
-	
 end
-coroutine.wrap(XEPKJ_fake_script)()
+coroutine.wrap(QDYFTNX_fake_script)()
