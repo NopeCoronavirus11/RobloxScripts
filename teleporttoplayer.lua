@@ -38,17 +38,23 @@ TeleportButton.TextSize = 14.000
 
 -- Scripts:
 
-local function QDYFTNX_fake_script() -- ScreenGui.Script 
+local function VDEJH_fake_script() -- ScreenGui.Script 
 	local script = Instance.new('Script', ScreenGui)
 
 	local teleportButton = script.Parent.TeleportButton -- Assume this script is in a LocalScript inside the ScreenGui
 	local nameInputBox = script.Parent.NameInputBox -- Reference to the TextBox
 	local player = game.Players.LocalPlayer -- The player who clicked the button
 	
-	-- Function to find a player by either username or display name
+	-- Function to find a player by username, display name, or first 3 letters
 	local function findPlayerByName(inputName)
+		inputName = inputName:lower() -- Convert input to lowercase for case-insensitive comparison
+	
 		for _, targetPlayer in ipairs(game.Players:GetPlayers()) do
-			if targetPlayer.Name:lower() == inputName:lower() or targetPlayer.DisplayName:lower() == inputName:lower() then
+			local username = targetPlayer.Name:lower()
+			local displayName = targetPlayer.DisplayName:lower()
+	
+			-- Check if input matches the full name or is a prefix of either username or display name
+			if username:sub(1, #inputName) == inputName or displayName:sub(1, #inputName) == inputName then
 				return targetPlayer
 			end
 		end
@@ -76,5 +82,6 @@ local function QDYFTNX_fake_script() -- ScreenGui.Script
 			print("Please enter a valid player name.")
 		end
 	end)
+	
 end
-coroutine.wrap(QDYFTNX_fake_script)()
+coroutine.wrap(VDEJH_fake_script)()
