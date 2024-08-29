@@ -1,3 +1,8 @@
+-- Gui to Lua
+-- Version: 3.2
+
+-- Instances:
+
 local ScreenGui = Instance.new("ScreenGui")
 local NameInputBox = Instance.new("TextBox")
 local TeleportButton = Instance.new("TextButton")
@@ -31,28 +36,36 @@ TeleportButton.Text = "TP to the guy"
 TeleportButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 TeleportButton.TextSize = 14.000
 
-local teleportButton = script.Parent.TeleportButton -- Assume this script is in a LocalScript inside the ScreenGui
-local nameInputBox = script.Parent.NameInputBox -- Reference to the TextBox
-local player = game.Players.LocalPlayer -- The player who clicked the button
+-- Scripts:
 
--- Function to teleport player to the target player
-local function teleportToPlayer(targetPlayerName)
-    local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
-    
-    if targetPlayer and targetPlayer.Character and player.Character then
-        local targetPosition = targetPlayer.Character.PrimaryPart.Position
-        player.Character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
-    else
-        print("Target player not found or no character exists.")
-    end
+local function XEPKJ_fake_script() -- ScreenGui.Script 
+	local script = Instance.new('Script', ScreenGui)
+
+	local teleportButton = script.Parent.TeleportButton -- Assume this script is in a LocalScript inside the ScreenGui
+	local nameInputBox = script.Parent.NameInputBox -- Reference to the TextBox
+	local player = game.Players.LocalPlayer -- The player who clicked the button
+	
+	-- Function to teleport player to the target player
+	local function teleportToPlayer(targetPlayerName)
+		local targetPlayer = game.Players:FindFirstChild(targetPlayerName)
+	
+		if targetPlayer and targetPlayer.Character and player.Character then
+			local targetPosition = targetPlayer.Character.PrimaryPart.Position
+			player.Character:SetPrimaryPartCFrame(CFrame.new(targetPosition))
+		else
+			print("Target player not found or no character exists.")
+		end
+	end
+	
+	-- Event handler for when the button is clicked
+	teleportButton.MouseButton1Click:Connect(function()
+		local targetPlayerName = nameInputBox.Text -- Get the player name from the TextBox
+		if targetPlayerName ~= "" then
+			teleportToPlayer(targetPlayerName)
+		else
+			print("Please enter a valid player name.")
+		end
+	end)
+	
 end
-
--- Event handler for when the button is clicked
-teleportButton.MouseButton1Click:Connect(function()
-    local targetPlayerName = nameInputBox.Text -- Get the player name from the TextBox
-    if targetPlayerName ~= "" then
-        teleportToPlayer(targetPlayerName)
-    else
-        print("Please enter a valid player name.")
-    end
-end)
+coroutine.wrap(XEPKJ_fake_script)()
