@@ -30,6 +30,8 @@ local StartGUI = Instance.new("ScreenGui")
 local Frame_2 = Instance.new("Frame")
 local UICorner_3 = Instance.new("UICorner")
 local TextLabel = Instance.new("TextLabel")
+local MovingColors = Instance.new("UIStroke")
+local UIGradient = Instance.new("UIGradient")
 
 --Properties:
 
@@ -276,8 +278,14 @@ TextLabel.TextSize = 14.000
 TextLabel.TextTransparency = 1.000
 TextLabel.TextWrapped = true
 
+MovingColors.Parent = Frame
+MovingColors.Color = Color3.fromRGB(255, 255, 255)
+MovingColors.Thickness = 15
+
+UIGradient.Parent = MovingColors
+
 -- Scripts:
-local function WLZX_fake_script() -- Frame_2.Script 
+local function UQTS_fake_script() -- Frame_2.Script 
 	local script = Instance.new('Script', Frame_2)
 
 	local TweenService = game:GetService("TweenService")
@@ -285,9 +293,9 @@ local function WLZX_fake_script() -- Frame_2.Script
 	local label = script.Parent:FindFirstChild("TextLabel")  -- Reference to the TextLabel
 	local transparency = 1  -- Starting transparency
 	local otherGUI = script.Parent.Parent.Parent:FindFirstChild("Frame")  -- Reference to the other ScreenGui or GUI
-	
+
 	initialTween:Play()
-	
+
 	initialTween.Completed:Connect(function()
 		-- Fade In
 		while transparency > 0 do  -- Loop while transparency is greater than 0
@@ -295,53 +303,53 @@ local function WLZX_fake_script() -- Frame_2.Script
 			wait(0.01)  -- Wait for 0.01 seconds
 			transparency = transparency - 0.05  -- Decrease transparency by 0.05
 		end
-	
+
 		-- Ensure the final transparency is set to 0 (fully visible)
 		label.TextTransparency = 0
-	
+
 		-- Wait for 3 seconds after the fade-in completes
 		wait(1)
-	
+
 		-- Reset transparency to 0 to start fade-out
 		transparency = 0
-	
+
 		-- Fade Out
 		while transparency < 1 do
 			label.TextTransparency = transparency  -- Set the current transparency
 			wait(0.01)  -- Wait for 0.01 seconds
 			transparency = transparency + 0.1  -- Increase transparency by 0.1
 		end
-	
+
 		-- Ensure the final transparency is set to 1 (fully invisible)
 		label.TextTransparency = 1
-	
+
 		-- Tween to change the GUI size after fade out
 		local sizeTween = TweenService:Create(script.Parent, TweenInfo.new(2), {Size = UDim2.new(0, 844, 0, 364)})
 		sizeTween:Play()
-	
+
 		sizeTween.Completed:Connect(function()
 			-- Destroy the current GUI
 			script.Parent.Parent:Destroy()
-	
+
 			-- Enable the other GUI
 			if otherGUI then
 				otherGUI.Visible = true  -- Make the other GUI visible
 			end
 		end)
 	end)
-	
-end
-coroutine.wrap(WLZX_fake_script)()
 
-local function XGWFGK_fake_script() -- Displayname.LocalScript 
+end
+coroutine.wrap(UQTS_fake_script)()
+
+local function QWXUIUL_fake_script() -- Displayname.LocalScript 
 	local script = Instance.new('LocalScript', Displayname)
 
 	local currentDisplayName = game.Players.LocalPlayer.DisplayName
 	
 	script.Parent.Text = "" .. currentDisplayName
 end
-coroutine.wrap(XGWFGK_fake_script)()
-local function PFUBMD_fake_script() -- ImageLabel.LocalScript 
+coroutine.wrap(QWXUIUL_fake_script)()
+local function DEFUWBX_fake_script() -- ImageLabel.LocalScript 
 	local script = Instance.new('LocalScript', ImageLabel)
 
 	local player = game.Players.LocalPlayer
@@ -358,16 +366,16 @@ local function PFUBMD_fake_script() -- ImageLabel.LocalScript
 	local imageLabel = script.Parent
 	imageLabel.Image = (isReady and content) or PLACEHOLDER_IMAGE
 end
-coroutine.wrap(PFUBMD_fake_script)()
-local function AYOHXH_fake_script() -- Username.LocalScript 
+coroutine.wrap(DEFUWBX_fake_script)()
+local function QGQOXWH_fake_script() -- Username.LocalScript 
 	local script = Instance.new('LocalScript', Username)
 
 	local currentUsername = game.Players.LocalPlayer.Name
 	
 	script.Parent.Text = "@" .. currentUsername
 end
-coroutine.wrap(AYOHXH_fake_script)()
-local function GQVK_fake_script() -- ImageButton.LocalScript 
+coroutine.wrap(QGQOXWH_fake_script)()
+local function ACWNKOM_fake_script() -- ImageButton.LocalScript 
 	local script = Instance.new('LocalScript', ImageButton)
 
 	local homeGUI = script.Parent.Parent.ScrollingFrame
@@ -377,8 +385,8 @@ local function GQVK_fake_script() -- ImageButton.LocalScript
 	end)
 	
 end
-coroutine.wrap(GQVK_fake_script)()
-local function SBOETJ_fake_script() -- TextButton.LocalScript 
+coroutine.wrap(ACWNKOM_fake_script)()
+local function DUGFE_fake_script() -- TextButton.LocalScript 
 	local script = Instance.new('LocalScript', TextButton)
 
 	local homeGUI = script.Parent.Parent.ScrollingFrame
@@ -388,8 +396,8 @@ local function SBOETJ_fake_script() -- TextButton.LocalScript
 	end)
 	
 end
-coroutine.wrap(SBOETJ_fake_script)()
-local function BZSNRY_fake_script() -- Toggle.LocalScript 
+coroutine.wrap(DUGFE_fake_script)()
+local function EMQVED_fake_script() -- Toggle.LocalScript 
 	local script = Instance.new('LocalScript', Toggle)
 
 	local toggled = false -- The start state of the toggle
@@ -443,8 +451,8 @@ local function BZSNRY_fake_script() -- Toggle.LocalScript
 	end)
 	
 end
-coroutine.wrap(BZSNRY_fake_script)()
-local function ELVWM_fake_script() -- Frame.MovingBorders 
+coroutine.wrap(EMQVED_fake_script)()
+local function ZGHFLKJ_fake_script() -- Frame.MovingBorders 
 	local script = Instance.new('LocalScript', Frame)
 
 	local UIgradient = script.Parent.MovingColors.UIGradient
@@ -454,8 +462,8 @@ local function ELVWM_fake_script() -- Frame.MovingBorders
 		UIgradient.Rotation +=2
 	end)
 end
-coroutine.wrap(ELVWM_fake_script)()
-local function JHDMJHO_fake_script() -- Frame.UIDrag 
+coroutine.wrap(ZGHFLKJ_fake_script)()
+local function QDTQU_fake_script() -- Frame.UIDrag 
 	local script = Instance.new('LocalScript', Frame)
 
 	--// Services
@@ -516,5 +524,18 @@ local function JHDMJHO_fake_script() -- Frame.UIDrag
 		end
 	end)
 end
-coroutine.wrap(JHDMJHO_fake_script)()
+coroutine.wrap(QDTQU_fake_script)()
 
+local function UIGHJZ_fake_script()
+	local color1 = Color3.fromRGB(56, 56, 56)
+	local color2 = Color3.fromRGB(173, 8, 255)
+
+	local colorSequence = ColorSequence.new{
+		ColorSequenceKeypoint.new(0, color1),
+		ColorSequenceKeypoint.new(1, color2)
+	}
+
+	script.Parent.Color = colorSequence
+end
+
+coroutine.wrap(UIGHJZ_fake_script)()
