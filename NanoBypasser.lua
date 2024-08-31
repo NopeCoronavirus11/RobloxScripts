@@ -456,7 +456,7 @@ coroutine.wrap(EMQVED_fake_script)()
 local function ZGHFLKJ_fake_script() -- Frame.MovingBorders 
 	local script = Instance.new('LocalScript', Frame)
 
-	local UIgradient = script.Parent.UIStroke.UIGradient
+	local UIgradient = script.Parent.MovingColors.UIGradient
 	local runservice = game:GetService("RunService")
 	
 	runservice.RenderStepped:Connect(function()
