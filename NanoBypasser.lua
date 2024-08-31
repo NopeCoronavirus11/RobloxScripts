@@ -277,7 +277,6 @@ TextLabel.TextTransparency = 1.000
 TextLabel.TextWrapped = true
 
 -- Scripts:
-coroutine.wrap(MVYAL_fake_script)()
 local function XVTJ_fake_script() -- Frame_2.Script 
 	local script = Instance.new('Script', Frame_2)
 
