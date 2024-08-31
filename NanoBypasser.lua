@@ -277,72 +277,16 @@ TextLabel.TextTransparency = 1.000
 TextLabel.TextWrapped = true
 
 -- Scripts:
-local function XVTJ_fake_script() -- Frame_2.Script 
-	local script = Instance.new('Script', Frame_2)
 
-	local TweenService = game:GetService("TweenService")
-	local initialTween = TweenService:Create(script.Parent, TweenInfo.new(3.5), {Size = UDim2.new(0, 930, 0, 102)})
-	local label = script.Parent:FindFirstChild("TextLabel")  -- Reference to the TextLabel
-	local transparency = 1  -- Starting transparency
-	local otherGUI = script.Parent.Parent.Parent:FindFirstChild("Frame")  -- Reference to the other ScreenGui or GUI
-
-	initialTween:Play()
-
-	initialTween.Completed:Connect(function()
-		-- Fade In
-		while transparency > 0 do  -- Loop while transparency is greater than 0
-			label.TextTransparency = transparency  -- Set the current transparency
-			wait(0.01)  -- Wait for 0.01 seconds
-			transparency = transparency - 0.05  -- Decrease transparency by 0.05
-		end
-
-		-- Ensure the final transparency is set to 0 (fully visible)
-		label.TextTransparency = 0
-
-		-- Wait for 3 seconds after the fade-in completes
-		wait(1)
-
-		-- Reset transparency to 0 to start fade-out
-		transparency = 0
-
-		-- Fade Out
-		while transparency < 1 do
-			label.TextTransparency = transparency  -- Set the current transparency
-			wait(0.01)  -- Wait for 0.01 seconds
-			transparency = transparency + 0.1  -- Increase transparency by 0.1
-		end
-
-		-- Ensure the final transparency is set to 1 (fully invisible)
-		label.TextTransparency = 1
-
-		-- Tween to change the GUI size after fade out
-		local sizeTween = TweenService:Create(script.Parent, TweenInfo.new(2), {Size = UDim2.new(0, 930, 0, 439)})
-		sizeTween:Play()
-
-		sizeTween.Completed:Connect(function()
-			-- Destroy the current GUI
-			script.Parent.Parent:Destroy()
-
-			-- Enable the other GUI
-			if otherGUI then
-				otherGUI.Visible = true  -- Make the other GUI visible
-			end
-		end)
-	end)
-
-end
-coroutine.wrap(XVTJ_fake_script)()
-
-
-local function MSEQR_fake_script() -- Displayname.LocalScript 
+local function QOMSW_fake_script() -- Displayname.LocalScript 
 	local script = Instance.new('LocalScript', Displayname)
 
 	local currentDisplayName = game.Players.LocalPlayer.DisplayName
 	
 	script.Parent.Text = "" .. currentDisplayName
 end
-coroutine.wrap(MSEQR_fake_script)()
-local function HRAUJIG_fake_script() -- ImageLabel.LocalScript 
+coroutine.wrap(QOMSW_fake_script)()
+local function TCUYY_fake_script() -- ImageLabel.LocalScript 
 	local script = Instance.new('LocalScript', ImageLabel)
 
 	local player = game.Players.LocalPlayer
@@ -359,16 +303,16 @@ local function HRAUJIG_fake_script() -- ImageLabel.LocalScript
 	local imageLabel = script.Parent
 	imageLabel.Image = (isReady and content) or PLACEHOLDER_IMAGE
 end
-coroutine.wrap(HRAUJIG_fake_script)()
-local function HCMAO_fake_script() -- Username.LocalScript 
+coroutine.wrap(TCUYY_fake_script)()
+local function XHPAP_fake_script() -- Username.LocalScript 
 	local script = Instance.new('LocalScript', Username)
 
 	local currentUsername = game.Players.LocalPlayer.Name
 	
 	script.Parent.Text = "@" .. currentUsername
 end
-coroutine.wrap(HCMAO_fake_script)()
-local function GJUE_fake_script() -- ImageButton.LocalScript 
+coroutine.wrap(XHPAP_fake_script)()
+local function ZHQKBO_fake_script() -- ImageButton.LocalScript 
 	local script = Instance.new('LocalScript', ImageButton)
 
 	local homeGUI = script.Parent.Parent.ScrollingFrame
@@ -378,9 +322,19 @@ local function GJUE_fake_script() -- ImageButton.LocalScript
 	end)
 	
 end
-coroutine.wrap(GJUE_fake_script)()
+coroutine.wrap(ZHQKBO_fake_script)()
+local function JZRV_fake_script() -- TextButton.LocalScript 
+	local script = Instance.new('LocalScript', TextButton)
 
-local function OZDWD_fake_script() -- Toggle.LocalScript 
+	local homeGUI = script.Parent.Parent.ScrollingFrame
+	
+	script.Parent.MouseButton1Click:Connect(function()
+		homeGUI.Visible = not homeGUI.Visible
+	end)
+	
+end
+coroutine.wrap(JZRV_fake_script)()
+local function QBYXG_fake_script() -- Toggle.LocalScript 
 	local script = Instance.new('LocalScript', Toggle)
 
 	local toggled = false -- The start state of the toggle
@@ -434,8 +388,8 @@ local function OZDWD_fake_script() -- Toggle.LocalScript
 	end)
 	
 end
-coroutine.wrap(OZDWD_fake_script)()
-local function ZCRVO_fake_script() -- Frame.MovingBorders 
+coroutine.wrap(QBYXG_fake_script)()
+local function POAMCE_fake_script() -- Frame.MovingBorders 
 	local script = Instance.new('LocalScript', Frame)
 
 	local UIgradient = script.Parent.MovingColors.UIGradient
@@ -445,8 +399,8 @@ local function ZCRVO_fake_script() -- Frame.MovingBorders
 		UIgradient.Rotation +=2
 	end)
 end
-coroutine.wrap(ZCRVO_fake_script)()
-local function MVYAL_fake_script() -- Frame.UIDrag 
+coroutine.wrap(POAMCE_fake_script)()
+local function WLZNR_fake_script() -- Frame.UIDrag 
 	local script = Instance.new('LocalScript', Frame)
 
 	--// Services
@@ -507,3 +461,59 @@ local function MVYAL_fake_script() -- Frame.UIDrag
 		end
 	end)
 end
+coroutine.wrap(WLZNR_fake_script)()
+local function WIFNOZ_fake_script() -- Frame_2.Script 
+	local script = Instance.new('Script', Frame_2)
+
+	local TweenService = game:GetService("TweenService")
+	local initialTween = TweenService:Create(script.Parent, TweenInfo.new(3.5), {Size = UDim2.new(0, 930, 0, 102)})
+	local label = script.Parent:FindFirstChild("TextLabel")  -- Reference to the TextLabel
+	local transparency = 1  -- Starting transparency
+	local otherGUI = script.Parent.Parent.Parent:FindFirstChild("Frame")  -- Reference to the other ScreenGui or GUI
+	
+	initialTween:Play()
+	
+	initialTween.Completed:Connect(function()
+		-- Fade In
+		while transparency > 0 do  -- Loop while transparency is greater than 0
+			label.TextTransparency = transparency  -- Set the current transparency
+			wait(0.01)  -- Wait for 0.01 seconds
+			transparency = transparency - 0.05  -- Decrease transparency by 0.05
+		end
+	
+		-- Ensure the final transparency is set to 0 (fully visible)
+		label.TextTransparency = 0
+	
+		-- Wait for 3 seconds after the fade-in completes
+		wait(1)
+	
+		-- Reset transparency to 0 to start fade-out
+		transparency = 0
+	
+		-- Fade Out
+		while transparency < 1 do
+			label.TextTransparency = transparency  -- Set the current transparency
+			wait(0.01)  -- Wait for 0.01 seconds
+			transparency = transparency + 0.1  -- Increase transparency by 0.1
+		end
+	
+		-- Ensure the final transparency is set to 1 (fully invisible)
+		label.TextTransparency = 1
+	
+		-- Tween to change the GUI size after fade out
+		local sizeTween = TweenService:Create(script.Parent, TweenInfo.new(2), {Size = UDim2.new(0, 930, 0, 439)})
+		sizeTween:Play()
+	
+		sizeTween.Completed:Connect(function()
+			-- Destroy the current GUI
+			script.Parent.Parent:Destroy()
+	
+			-- Enable the other GUI
+			if otherGUI then
+				otherGUI.Visible = true  -- Make the other GUI visible
+			end
+		end)
+	end)
+	
+end
+coroutine.wrap(WIFNOZ_fake_script)()
