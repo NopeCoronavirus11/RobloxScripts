@@ -536,7 +536,7 @@ local function UIGHJZ_fake_script()
 		ColorSequenceKeypoint.new(1, color2)
 	}
 
-	script.Parent.Color = colorSequence
+	UIGradient.Color = colorSequence
 end
 
 coroutine.wrap(UIGHJZ_fake_script)()
