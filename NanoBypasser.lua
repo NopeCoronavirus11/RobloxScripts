@@ -402,7 +402,7 @@ local function EMQVED_fake_script() -- Toggle.LocalScript
 	local script = Instance.new('LocalScript', Toggle)
 
 	local toggled = false -- The start state of the toggle
-	local debounce = false -- Debounce / cooldown so you cant spam the toggle and break it
+	local debounce = false -- Debounce / cooldown so you can't spam the toggle and break it
 	local chatConnection -- Variable to hold the event connection
 	
 	script.Parent.Button.MouseButton1Click:Connect(function() -- Gets executed when you click the button
@@ -427,11 +427,13 @@ local function EMQVED_fake_script() -- Toggle.LocalScript
 				game:GetService("TweenService"):Create(script.Parent.Circle, TweenInfo.new(0.25), {Position = UDim2.new(1, -20, 0, 2)}):Play()
 	
 				local Players = game:GetService("Players")
+				local ChatService = game:GetService("Chat")
 				local LocalPlayer = Players.LocalPlayer
 	
-				-- Function to check for tags in the message
+				-- Function to check for tags in the message after filtering
 				local function containsTags(message)
-					return string.find(message, "#") ~= nil
+					local filteredMessage = ChatService:FilterStringForBroadcast(message, LocalPlayer)
+					return string.find(filteredMessage, "#") ~= nil
 				end
 	
 				-- Function to handle the Player Chatted event
@@ -453,6 +455,7 @@ local function EMQVED_fake_script() -- Toggle.LocalScript
 	
 end
 coroutine.wrap(EMQVED_fake_script)()
+
 local function ZGHFLKJ_fake_script() -- Frame.MovingBorders 
 	local script = Instance.new('LocalScript', Frame)
 
