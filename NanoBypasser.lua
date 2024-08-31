@@ -1,386 +1,293 @@
---[[
-	
-	Gui2Lua Winning! ~ Ch0nky Code:tm:
-	
-	38 instances
-	
-	-> 10:07:2023 	-	fixed "Http requests can only be executed by game server" error when pressing "Play"
-					-	fixed modulescripts's "script" variable not being set properly
-					-	plugin will now retry fetching an api dump from the web if it did not fetch it successfully last time
-					
-					
-	-> 26:07:2023 	-	plugin will now cache instance property lists (slight performance improvement)
-					-	increased "max string length" threshold, plugin may generate less splits on large selections
-					
-					
-	-> 18:09:2023	- 	full plugin rewrite
-					-	splits of long scripts will now be created under a localscript instead of a folder
-					-	plugin now has single pass conversion, should be MUCH faster
-					-	added attributes
-					- 	fixed "allow plugin to acces ?" prompt
-					-	you can now disable automatic opening of scripts from the commandline
-						>	"shared.gv2.require("settings").data.autoOpenScripts = false" or "shared.gv2.require("settings").data.autoOpenScripts = true"
-						> 	"false" stands for disabled and "true" stands for enabled, setting this option WILL save		
-					
-					
-	-> 08:10:2023	-	added icon
-					
-					
-	-> 30:11:2023	-	output will now always be generated as one script (no more output splitting!)
-					-	fixed missing comma when generating big outputs
-					-	fixed duplicate processing when selecting an instance and its parent
-					-	fixed issue with default properties
-					-	fixed autoupdating api dump since roblox broke it
-					-	you can now change the default script creation type to "ModuleScript", "LocalScript" or "Script" from the commandline, for example:
-						>	"shared.gv2.require("settings").data.scriptCreationType = "Script""
-						>	you can use "ModuleScript", "LocalScript" or "Script"
-					
-					
-	-> 16:02:2024	-	improved studio version scanning algorithm, no more errors when parsing api dump
-					-	fixed properties that defaulted to nil being missed
-					
-					
-	-> 19:02:2024	-	fixed properties of type "Instance" not being converted properly
-					
-					
-	-> 17:03:2024	-	added support for Path2D
-					-	improved default variable names for different output types
-					-	fixed of properties of type "Instance" not being referenced when using roact or fusion
-	
-]]--
+-- Gui to Lua
+-- Version: 3.2
 
-local tbl =
-{
-	menuGUI = Instance.new("ScreenGui"),
-	Frame = Instance.new("Frame"),
-	Top = Instance.new("Folder"),
-	Displayname = Instance.new("TextLabel"),
-	LocalScript = Instance.new("LocalScript"),
-	NanoText = Instance.new("TextLabel"),
-	ImageLabel = Instance.new("ImageLabel"),
-	LocalScript_1 = Instance.new("LocalScript"),
-	UICorner = Instance.new("UICorner"),
-	Username = Instance.new("TextLabel"),
-	LocalScript_2 = Instance.new("LocalScript"),
-	Home = Instance.new("Folder"),
-	ImageButton = Instance.new("ImageButton"),
-	LocalScript_3 = Instance.new("LocalScript"),
-	TextButton = Instance.new("TextButton"),
-	LocalScript_4 = Instance.new("LocalScript"),
-	ScrollingFrame = Instance.new("ScrollingFrame"),
-	abababb = Instance.new("Folder"),
-	TextButton_1 = Instance.new("TextButton"),
-	UICorner_1 = Instance.new("UICorner"),
-	Toggle = Instance.new("ImageLabel"),
-	Button = Instance.new("TextButton"),
-	Circle = Instance.new("ImageLabel"),
-	LocalScript_5 = Instance.new("LocalScript"),
-	Button_1 = Instance.new("TextButton"),
-	Credits = Instance.new("Folder"),
-	ImageButton_1 = Instance.new("ImageButton"),
-	TextButton_2 = Instance.new("TextButton"),
-	MovingColors = Instance.new("UIStroke"),
-	UIGradient = Instance.new("UIGradient"),
-	MovingBorders = Instance.new("LocalScript"),
-	UIDrag = Instance.new("LocalScript"),
-	ImageLabel_1 = Instance.new("ImageLabel"),
-	StartGUI = Instance.new("ScreenGui"),
-	Frame_1 = Instance.new("Frame"),
-	UICorner_2 = Instance.new("UICorner"),
-	Script = Instance.new("Script"),
-	TextLabel = Instance.new("TextLabel")
-}
+-- Instances:
 
-tbl.menuGUI.Name = "menuGUI"
-tbl.menuGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-tbl.menuGUI.Parent = game:GetService("StarterGui")
+local menuGUI = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local Top = Instance.new("Folder")
+local Displayname = Instance.new("TextLabel")
+local NanoText = Instance.new("TextLabel")
+local ImageLabel = Instance.new("ImageLabel")
+local UICorner = Instance.new("UICorner")
+local Username = Instance.new("TextLabel")
+local Home = Instance.new("Folder")
+local ImageButton = Instance.new("ImageButton")
+local TextButton = Instance.new("TextButton")
+local ScrollingFrame = Instance.new("ScrollingFrame")
+local abababb = Instance.new("Folder")
+local TextButton_2 = Instance.new("TextButton")
+local UICorner_2 = Instance.new("UICorner")
+local Toggle = Instance.new("ImageLabel")
+local Button = Instance.new("TextButton")
+local Circle = Instance.new("ImageLabel")
+local Button_2 = Instance.new("TextButton")
+local Credits = Instance.new("Folder")
+local ImageButton_2 = Instance.new("ImageButton")
+local TextButton_3 = Instance.new("TextButton")
+local ImageLabel_2 = Instance.new("ImageLabel")
+local StartGUI = Instance.new("ScreenGui")
+local Frame_2 = Instance.new("Frame")
+local UICorner_3 = Instance.new("UICorner")
+local TextLabel = Instance.new("TextLabel")
 
-tbl.Frame.Active = true
-tbl.Frame.BorderSizePixel = 0
-tbl.Frame.BackgroundColor3 = Color3.fromRGB(56, 56, 56)
-tbl.Frame.Size = UDim2.new(0, 844, 0, 364)
-tbl.Frame.ClipsDescendants = true
-tbl.Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Frame.Visible = false
-tbl.Frame.Position = UDim2.new(0.192994, 0, 0.255025, 0)
-tbl.Frame.Parent = tbl.menuGUI
+--Properties:
 
-tbl.Top.Name = "Top"
-tbl.Top.Parent = tbl.Frame
+menuGUI.Name = "menuGUI"
+menuGUI.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+menuGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-tbl.Displayname.TextWrapped = true
-tbl.Displayname.BorderSizePixel = 0
-tbl.Displayname.RichText = true
-tbl.Displayname.TextScaled = true
-tbl.Displayname.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.Displayname.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.Displayname.Position = UDim2.new(0.0741935, 0, 0.0113897, 0)
-tbl.Displayname.Name = "Displayname"
-tbl.Displayname.TextSize = 14
-tbl.Displayname.Size = UDim2.new(0, 185, 0, 30)
-tbl.Displayname.ZIndex = 5
-tbl.Displayname.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Displayname.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Displayname.BackgroundTransparency = 1
-tbl.Displayname.Parent = tbl.Top
+Frame.Parent = menuGUI
+Frame.Active = true
+Frame.BackgroundColor3 = Color3.fromRGB(56, 56, 56)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.ClipsDescendants = true
+Frame.Position = UDim2.new(0.192993626, 0, 0.255025119, 0)
+Frame.Size = UDim2.new(0, 844, 0, 364)
+Frame.Visible = false
 
-tbl.LocalScript.Parent = tbl.Displayname
+Top.Name = "Top"
+Top.Parent = Frame
 
-tbl.NanoText.TextWrapped = true
-tbl.NanoText.BorderSizePixel = 0
-tbl.NanoText.RichText = true
-tbl.NanoText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.NanoText.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.NanoText.Position = UDim2.new(0.457017, 0, -0.11892, 0)
-tbl.NanoText.Name = "NanoText"
-tbl.NanoText.AutomaticSize = Enum.AutomaticSize.X
-tbl.NanoText.TextSize = 33
-tbl.NanoText.Size = UDim2.new(0, 629, 0, 142)
-tbl.NanoText.ZIndex = 2
-tbl.NanoText.TextColor3 = Color3.fromRGB(225, 225, 225)
-tbl.NanoText.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.NanoText.Text = "🌃 | NanoBypasser V1.5 |"
-tbl.NanoText.BackgroundTransparency = 1
-tbl.NanoText.Parent = tbl.Top
+Displayname.Name = "Displayname"
+Displayname.Parent = Top
+Displayname.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Displayname.BackgroundTransparency = 1.000
+Displayname.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Displayname.BorderSizePixel = 0
+Displayname.Position = UDim2.new(0.0741935447, 0, 0.0113896606, 0)
+Displayname.Size = UDim2.new(0, 185, 0, 30)
+Displayname.ZIndex = 5
+Displayname.Font = Enum.Font.SourceSans
+Displayname.TextColor3 = Color3.fromRGB(0, 0, 0)
+Displayname.TextScaled = true
+Displayname.TextSize = 14.000
+Displayname.TextWrapped = true
 
-tbl.ImageLabel.BorderSizePixel = 0
-tbl.ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.ImageLabel.Position = UDim2.new(0.00752689, 0, 0.0113895, 0)
-tbl.ImageLabel.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
-tbl.ImageLabel.Size = UDim2.new(0, 62, 0, 64)
-tbl.ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.ImageLabel.ZIndex = 18
-tbl.ImageLabel.Parent = tbl.Top
+NanoText.Name = "NanoText"
+NanoText.Parent = Top
+NanoText.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+NanoText.BackgroundTransparency = 1.000
+NanoText.BorderColor3 = Color3.fromRGB(0, 0, 0)
+NanoText.BorderSizePixel = 0
+NanoText.Position = UDim2.new(0.457017213, 0, -0.118920378, 0)
+NanoText.Size = UDim2.new(0, 629, 0, 142)
+NanoText.ZIndex = 2
+NanoText.Font = Enum.Font.SourceSans
+NanoText.Text = "🌃 | NanoBypasser V1.5 |"
+NanoText.TextColor3 = Color3.fromRGB(225, 225, 225)
+NanoText.TextSize = 33.000
+NanoText.TextWrapped = true
 
-tbl.LocalScript_1.Parent = tbl.ImageLabel
+ImageLabel.Parent = Top
+ImageLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ImageLabel.BorderSizePixel = 0
+ImageLabel.Position = UDim2.new(0.00752688572, 0, 0.0113895126, 0)
+ImageLabel.Size = UDim2.new(0, 62, 0, 64)
+ImageLabel.ZIndex = 18
+ImageLabel.Image = "rbxasset://textures/ui/GuiImagePlaceholder.png"
 
-tbl.UICorner.CornerRadius = UDim.new(0.9, 0)
-tbl.UICorner.Parent = tbl.ImageLabel
+UICorner.CornerRadius = UDim.new(0.899999976, 0)
+UICorner.Parent = ImageLabel
 
-tbl.Username.TextWrapped = true
-tbl.Username.BorderSizePixel = 0
-tbl.Username.RichText = true
-tbl.Username.TextScaled = true
-tbl.Username.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.Username.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.Username.Position = UDim2.new(0.0978495, 0, 0.0797268, 0)
-tbl.Username.Name = "Username"
-tbl.Username.TextSize = 14
-tbl.Username.Size = UDim2.new(0, 138, 0, 16)
-tbl.Username.ZIndex = 2
-tbl.Username.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Username.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Username.BackgroundTransparency = 1
-tbl.Username.Parent = tbl.Top
+Username.Name = "Username"
+Username.Parent = Top
+Username.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Username.BackgroundTransparency = 1.000
+Username.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Username.BorderSizePixel = 0
+Username.Position = UDim2.new(0.0978494659, 0, 0.0797267929, 0)
+Username.Size = UDim2.new(0, 138, 0, 16)
+Username.ZIndex = 2
+Username.Font = Enum.Font.SourceSans
+Username.TextColor3 = Color3.fromRGB(0, 0, 0)
+Username.TextScaled = true
+Username.TextSize = 14.000
+Username.TextWrapped = true
 
-tbl.LocalScript_2.Parent = tbl.Username
+Home.Name = "Home"
+Home.Parent = Frame
 
-tbl.Home.Name = "Home"
-tbl.Home.Parent = tbl.Frame
+ImageButton.Parent = Home
+ImageButton.BackgroundColor3 = Color3.fromRGB(86, 86, 6)
+ImageButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton.BorderSizePixel = 0
+ImageButton.Position = UDim2.new(0.00967741944, 0, 0.27334851, 0)
+ImageButton.Size = UDim2.new(0, 60, 0, 56)
+ImageButton.ZIndex = 2
+ImageButton.Image = "http://www.roblox.com/asset/?id=113189962573119"
 
-tbl.ImageButton.ZIndex = 2
-tbl.ImageButton.BorderSizePixel = 0
-tbl.ImageButton.Position = UDim2.new(0.00967742, 0, 0.273349, 0)
-tbl.ImageButton.BackgroundColor3 = Color3.fromRGB(86, 86, 6)
-tbl.ImageButton.Image = "http://www.roblox.com/asset/?id=113189962573119"
-tbl.ImageButton.Size = UDim2.new(0, 60, 0, 56)
-tbl.ImageButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.ImageButton.Parent = tbl.Home
+TextButton.Parent = Home
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BackgroundTransparency = 1.000
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.0741935447, 0, 0.280182242, 0)
+TextButton.Size = UDim2.new(0, 138, 0, 50)
+TextButton.ZIndex = 2
+TextButton.Font = Enum.Font.SourceSans
+TextButton.Text = "Home"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextScaled = true
+TextButton.TextSize = 14.000
+TextButton.TextWrapped = true
 
-tbl.LocalScript_3.Parent = tbl.ImageButton
+ScrollingFrame.Parent = Home
+ScrollingFrame.Active = true
+ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ScrollingFrame.BackgroundTransparency = 1.000
+ScrollingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ScrollingFrame.BorderSizePixel = 0
+ScrollingFrame.Position = UDim2.new(0.273118287, 0, 0.138952106, 0)
+ScrollingFrame.Size = UDim2.new(0, 609, 0, 312)
+ScrollingFrame.Visible = false
+ScrollingFrame.ZIndex = 2
 
-tbl.TextButton.TextWrapped = true
-tbl.TextButton.ZIndex = 2
-tbl.TextButton.BorderSizePixel = 0
-tbl.TextButton.RichText = true
-tbl.TextButton.Position = UDim2.new(0.0741935, 0, 0.280182, 0)
-tbl.TextButton.TextScaled = true
-tbl.TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.TextButton.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.TextButton.TextSize = 14
-tbl.TextButton.Size = UDim2.new(0, 138, 0, 50)
-tbl.TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextButton.Text = "Home"
-tbl.TextButton.BackgroundTransparency = 1
-tbl.TextButton.Parent = tbl.Home
+abababb.Name = "abababb"
+abababb.Parent = ScrollingFrame
 
-tbl.LocalScript_4.Parent = tbl.TextButton
+TextButton_2.Parent = abababb
+TextButton_2.BackgroundColor3 = Color3.fromRGB(49, 49, 49)
+TextButton_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton_2.BorderSizePixel = 0
+TextButton_2.Position = UDim2.new(0.0197044332, 0, 0.000903789827, 0)
+TextButton_2.Size = UDim2.new(0, 601, 0, 50)
+TextButton_2.Font = Enum.Font.SourceSans
+TextButton_2.Text = "Auto ababab-0"
+TextButton_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton_2.TextSize = 39.000
 
-tbl.ScrollingFrame.Visible = false
-tbl.ScrollingFrame.ZIndex = 2
-tbl.ScrollingFrame.BorderSizePixel = 0
-tbl.ScrollingFrame.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.ScrollingFrame.BackgroundTransparency = 1
-tbl.ScrollingFrame.Size = UDim2.new(0, 609, 0, 312)
-tbl.ScrollingFrame.ScrollBarImageColor3 = Color3.fromRGB(0, 0, 0)
-tbl.ScrollingFrame.Active = true
-tbl.ScrollingFrame.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.ScrollingFrame.Position = UDim2.new(0.273118, 0, 0.138952, 0)
-tbl.ScrollingFrame.Parent = tbl.Home
+UICorner_2.CornerRadius = UDim.new(0.100000001, 0)
+UICorner_2.Parent = TextButton_2
 
-tbl.abababb.Name = "abababb"
-tbl.abababb.Parent = tbl.ScrollingFrame
+Toggle.Name = "Toggle"
+Toggle.Parent = abababb
+Toggle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
+Toggle.BackgroundTransparency = 1.000
+Toggle.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Toggle.Position = UDim2.new(0.91836381, -23, 0.0361861214, -11)
+Toggle.Size = UDim2.new(0, 46, 0, 22)
+Toggle.ZIndex = 9
+Toggle.Image = "rbxassetid://3570695787"
+Toggle.ImageColor3 = Color3.fromRGB(200, 200, 200)
+Toggle.ScaleType = Enum.ScaleType.Slice
+Toggle.SliceCenter = Rect.new(100, 100, 100, 100)
+Toggle.SliceScale = 0.120
 
-tbl.TextButton_1.BorderSizePixel = 0
-tbl.TextButton_1.RichText = true
-tbl.TextButton_1.Position = UDim2.new(0.0197044, 0, 0.00090379, 0)
-tbl.TextButton_1.BackgroundColor3 = Color3.fromRGB(49, 49, 49)
-tbl.TextButton_1.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.TextButton_1.TextSize = 39
-tbl.TextButton_1.Size = UDim2.new(0, 601, 0, 50)
-tbl.TextButton_1.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextButton_1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextButton_1.Text = "Auto ababab-0"
-tbl.TextButton_1.Parent = tbl.abababb
+Button.Name = "Button"
+Button.Parent = Toggle
+Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Button.BackgroundTransparency = 1.000
+Button.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Button.Size = UDim2.new(1, 0, 1, 0)
+Button.Font = Enum.Font.SourceSans
+Button.TextColor3 = Color3.fromRGB(0, 0, 0)
+Button.TextSize = 14.000
+Button.TextTransparency = 1.000
 
-tbl.UICorner_1.CornerRadius = UDim.new(0.1, 0)
-tbl.UICorner_1.Parent = tbl.TextButton_1
+Circle.Name = "Circle"
+Circle.Parent = Toggle
+Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Circle.BackgroundTransparency = 1.000
+Circle.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Circle.Position = UDim2.new(0, 2, 0, 2)
+Circle.Size = UDim2.new(0, 18, 0, 18)
+Circle.Image = "rbxassetid://3570695787"
+Circle.ScaleType = Enum.ScaleType.Slice
+Circle.SliceCenter = Rect.new(100, 100, 100, 100)
+Circle.SliceScale = 0.120
 
-tbl.Toggle.ImageColor3 = Color3.fromRGB(200, 200, 200)
-tbl.Toggle.SliceCenter = Rect.new(100, 100, 100, 100)
-tbl.Toggle.ScaleType = Enum.ScaleType.Slice
-tbl.Toggle.BackgroundColor3 = Color3.fromRGB(200, 200, 200)
-tbl.Toggle.Position = UDim2.new(0.918364, -23, 0.0361861, -11)
-tbl.Toggle.Name = "Toggle"
-tbl.Toggle.Image = "rbxassetid://3570695787"
-tbl.Toggle.Size = UDim2.new(0, 46, 0, 22)
-tbl.Toggle.BorderColor3 = Color3.fromRGB(27, 42, 53)
-tbl.Toggle.ZIndex = 9
-tbl.Toggle.BackgroundTransparency = 1
-tbl.Toggle.SliceScale = 0.12
-tbl.Toggle.Parent = tbl.abababb
+Button_2.Name = "Button"
+Button_2.Parent = ScrollingFrame
+Button_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Button_2.BackgroundTransparency = 1.000
+Button_2.BorderColor3 = Color3.fromRGB(27, 42, 53)
+Button_2.Size = UDim2.new(1, 0, 1, 0)
+Button_2.Font = Enum.Font.SourceSans
+Button_2.TextColor3 = Color3.fromRGB(0, 0, 0)
+Button_2.TextSize = 14.000
+Button_2.TextTransparency = 1.000
 
-tbl.Button.TextTransparency = 1
-tbl.Button.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.Button.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.Button.Name = "Button"
-tbl.Button.TextSize = 14
-tbl.Button.Size = UDim2.new(1, 0, 1, 0)
-tbl.Button.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Button.BorderColor3 = Color3.fromRGB(27, 42, 53)
-tbl.Button.BackgroundTransparency = 1
-tbl.Button.Parent = tbl.Toggle
+Credits.Name = "Credits"
+Credits.Parent = Frame
 
-tbl.Circle.SliceCenter = Rect.new(100, 100, 100, 100)
-tbl.Circle.ScaleType = Enum.ScaleType.Slice
-tbl.Circle.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.Circle.Position = UDim2.new(0, 2, 0, 2)
-tbl.Circle.Name = "Circle"
-tbl.Circle.Image = "rbxassetid://3570695787"
-tbl.Circle.Size = UDim2.new(0, 18, 0, 18)
-tbl.Circle.BorderColor3 = Color3.fromRGB(27, 42, 53)
-tbl.Circle.BackgroundTransparency = 1
-tbl.Circle.SliceScale = 0.12
-tbl.Circle.Parent = tbl.Toggle
+ImageButton_2.Parent = Credits
+ImageButton_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageButton_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ImageButton_2.BorderSizePixel = 0
+ImageButton_2.Position = UDim2.new(0.00752688153, 0, 0.478359908, 0)
+ImageButton_2.Size = UDim2.new(0, 62, 0, 55)
+ImageButton_2.ZIndex = 2
+ImageButton_2.Image = "http://www.roblox.com/asset/?id=77566575556099"
+ImageButton_2.ImageColor3 = Color3.fromRGB(54, 54, 54)
 
-tbl.LocalScript_5.Parent = tbl.Toggle
+TextButton_3.Parent = Credits
+TextButton_3.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton_3.BackgroundTransparency = 1.000
+TextButton_3.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton_3.BorderSizePixel = 0
+TextButton_3.Position = UDim2.new(0.0741935447, 0, 0.503416836, 0)
+TextButton_3.Size = UDim2.new(0, 146, 0, 44)
+TextButton_3.ZIndex = 2
+TextButton_3.Font = Enum.Font.SourceSans
+TextButton_3.Text = "Credits"
+TextButton_3.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton_3.TextScaled = true
+TextButton_3.TextSize = 14.000
+TextButton_3.TextStrokeColor3 = Color3.fromRGB(223, 19, 0)
+TextButton_3.TextWrapped = true
 
-tbl.Button_1.TextTransparency = 1
-tbl.Button_1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.Button_1.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.Button_1.Name = "Button"
-tbl.Button_1.TextSize = 14
-tbl.Button_1.Size = UDim2.new(1, 0, 1, 0)
-tbl.Button_1.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Button_1.BorderColor3 = Color3.fromRGB(27, 42, 53)
-tbl.Button_1.BackgroundTransparency = 1
-tbl.Button_1.Parent = tbl.ScrollingFrame
+ImageLabel_2.Parent = Frame
+ImageLabel_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+ImageLabel_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+ImageLabel_2.BorderSizePixel = 0
+ImageLabel_2.Size = UDim2.new(0, 930, 0, 439)
+ImageLabel_2.Image = "http://www.roblox.com/asset/?id=116411575412110"
+ImageLabel_2.ScaleType = Enum.ScaleType.Crop
 
-tbl.Credits.Name = "Credits"
-tbl.Credits.Parent = tbl.Frame
+StartGUI.Name = "StartGUI"
+StartGUI.Parent = menuGUI
+StartGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-tbl.ImageButton_1.ImageColor3 = Color3.fromRGB(54, 54, 54)
-tbl.ImageButton_1.ZIndex = 2
-tbl.ImageButton_1.BorderSizePixel = 0
-tbl.ImageButton_1.Position = UDim2.new(0.00752688, 0, 0.47836, 0)
-tbl.ImageButton_1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.ImageButton_1.Image = "http://www.roblox.com/asset/?id=77566575556099"
-tbl.ImageButton_1.Size = UDim2.new(0, 62, 0, 55)
-tbl.ImageButton_1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.ImageButton_1.Parent = tbl.Credits
+Frame_2.Parent = StartGUI
+Frame_2.BackgroundColor3 = Color3.fromRGB(56, 56, 56)
+Frame_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame_2.BorderSizePixel = 0
+Frame_2.Position = UDim2.new(0.193000004, 0, 0.191, 0)
+Frame_2.Size = UDim2.new(0, 7, 0, 102)
 
-tbl.TextButton_2.TextWrapped = true
-tbl.TextButton_2.ZIndex = 2
-tbl.TextButton_2.BorderSizePixel = 0
-tbl.TextButton_2.RichText = true
-tbl.TextButton_2.Position = UDim2.new(0.0741935, 0, 0.503417, 0)
-tbl.TextButton_2.TextScaled = true
-tbl.TextButton_2.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.TextButton_2.FontFace = Font.new("rbxasset://fonts/families/SourceSansPro.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.TextButton_2.TextStrokeColor3 = Color3.fromRGB(223, 19, 0)
-tbl.TextButton_2.TextSize = 14
-tbl.TextButton_2.Size = UDim2.new(0, 146, 0, 44)
-tbl.TextButton_2.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextButton_2.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextButton_2.Text = "Credits"
-tbl.TextButton_2.BackgroundTransparency = 1
-tbl.TextButton_2.Parent = tbl.Credits
+UICorner_3.CornerRadius = UDim.new(0.100000001, 0)
+UICorner_3.Parent = Frame_2
 
-tbl.MovingColors.Color = Color3.fromRGB(254, 254, 254)
-tbl.MovingColors.Thickness = 15
-tbl.MovingColors.Name = "MovingColors"
-tbl.MovingColors.Parent = tbl.Frame
+TextLabel.Parent = Frame_2
+TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextLabel.BackgroundTransparency = 1.000
+TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Position = UDim2.new(0.289999992, 0, 0.147, 0)
+TextLabel.Size = UDim2.new(0, 448, 0, 72)
+TextLabel.Font = Enum.Font.FredokaOne
+TextLabel.Text = "Enjoy Swearing!"
+TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.TextScaled = true
+TextLabel.TextSize = 14.000
+TextLabel.TextTransparency = 1.000
+TextLabel.TextWrapped = true
 
-tbl.UIGradient.Color = ColorSequence.new{ ColorSequenceKeypoint.new(0, Color3.fromRGB(27, 27, 27)), ColorSequenceKeypoint.new(1, Color3.fromRGB(212, 38, 255)) }
-tbl.UIGradient.Parent = tbl.MovingColors
+-- Scripts:
 
-tbl.MovingBorders.Name = "MovingBorders"
-tbl.MovingBorders.Parent = tbl.Frame
-
-tbl.UIDrag.Name = "UIDrag"
-tbl.UIDrag.Parent = tbl.Frame
-
-tbl.ImageLabel_1.BorderSizePixel = 0
-tbl.ImageLabel_1.ScaleType = Enum.ScaleType.Crop
-tbl.ImageLabel_1.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.ImageLabel_1.Image = "http://www.roblox.com/asset/?id=116411575412110"
-tbl.ImageLabel_1.Size = UDim2.new(0, 930, 0, 439)
-tbl.ImageLabel_1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.ImageLabel_1.Parent = tbl.Frame
-
-tbl.StartGUI.Name = "StartGUI"
-tbl.StartGUI.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-tbl.StartGUI.Parent = tbl.menuGUI
-
-tbl.Frame_1.BorderSizePixel = 0
-tbl.Frame_1.BackgroundColor3 = Color3.fromRGB(56, 56, 56)
-tbl.Frame_1.Size = UDim2.new(0, 7, 0, 102)
-tbl.Frame_1.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.Frame_1.Position = UDim2.new(0.193, 0, 0.191, 0)
-tbl.Frame_1.Parent = tbl.StartGUI
-
-tbl.UICorner_2.CornerRadius = UDim.new(0.1, 0)
-tbl.UICorner_2.Parent = tbl.Frame_1
-
-tbl.Script.Parent = tbl.Frame_1
-
-tbl.TextLabel.TextWrapped = true
-tbl.TextLabel.BorderSizePixel = 0
-tbl.TextLabel.RichText = true
-tbl.TextLabel.TextScaled = true
-tbl.TextLabel.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
-tbl.TextLabel.FontFace = Font.new("rbxasset://fonts/families/FredokaOne.json", Enum.FontWeight.Regular, Enum.FontStyle.Normal)
-tbl.TextLabel.TextTransparency = 1
-tbl.TextLabel.Position = UDim2.new(0.29, 0, 0.147, 0)
-tbl.TextLabel.TextSize = 14
-tbl.TextLabel.Size = UDim2.new(0, 448, 0, 72)
-tbl.TextLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
-tbl.TextLabel.Text = "Enjoy Swearing!"
-tbl.TextLabel.BackgroundTransparency = 1
-tbl.TextLabel.Parent = tbl.Frame_1
-
-task.spawn(function()
-	local script = tbl.LocalScript
+local function XGWFGK_fake_script() -- Displayname.LocalScript 
+	local script = Instance.new('LocalScript', Displayname)
 
 	local currentDisplayName = game.Players.LocalPlayer.DisplayName
 	
 	script.Parent.Text = "" .. currentDisplayName
-end)
-
-task.spawn(function()
-	local script = tbl.LocalScript_1
+end
+coroutine.wrap(XGWFGK_fake_script)()
+local function PFUBMD_fake_script() -- ImageLabel.LocalScript 
+	local script = Instance.new('LocalScript', ImageLabel)
 
 	local player = game.Players.LocalPlayer
 	
@@ -395,29 +302,18 @@ task.spawn(function()
 	-- set the ImageLabel's content to the user thumbnail
 	local imageLabel = script.Parent
 	imageLabel.Image = (isReady and content) or PLACEHOLDER_IMAGE
-end)
-
-task.spawn(function()
-	local script = tbl.LocalScript_2
+end
+coroutine.wrap(PFUBMD_fake_script)()
+local function AYOHXH_fake_script() -- Username.LocalScript 
+	local script = Instance.new('LocalScript', Username)
 
 	local currentUsername = game.Players.LocalPlayer.Name
 	
 	script.Parent.Text = "@" .. currentUsername
-end)
-
-task.spawn(function()
-	local script = tbl.LocalScript_3
-
-	local homeGUI = script.Parent.Parent.ScrollingFrame
-	
-	script.Parent.MouseButton1Click:Connect(function()
-		homeGUI.Visible = not homeGUI.Visible
-	end)
-	
-end)
-
-task.spawn(function()
-	local script = tbl.LocalScript_4
+end
+coroutine.wrap(AYOHXH_fake_script)()
+local function GQVK_fake_script() -- ImageButton.LocalScript 
+	local script = Instance.new('LocalScript', ImageButton)
 
 	local homeGUI = script.Parent.Parent.ScrollingFrame
 	
@@ -425,10 +321,21 @@ task.spawn(function()
 		homeGUI.Visible = not homeGUI.Visible
 	end)
 	
-end)
+end
+coroutine.wrap(GQVK_fake_script)()
+local function SBOETJ_fake_script() -- TextButton.LocalScript 
+	local script = Instance.new('LocalScript', TextButton)
 
-task.spawn(function()
-	local script = tbl.LocalScript_5
+	local homeGUI = script.Parent.Parent.ScrollingFrame
+	
+	script.Parent.MouseButton1Click:Connect(function()
+		homeGUI.Visible = not homeGUI.Visible
+	end)
+	
+end
+coroutine.wrap(SBOETJ_fake_script)()
+local function BZSNRY_fake_script() -- Toggle.LocalScript 
+	local script = Instance.new('LocalScript', Toggle)
 
 	local toggled = false -- The start state of the toggle
 	local debounce = false -- Debounce / cooldown so you cant spam the toggle and break it
@@ -480,10 +387,10 @@ task.spawn(function()
 		end
 	end)
 	
-end)
-
-task.spawn(function()
-	local script = tbl.MovingBorders
+end
+coroutine.wrap(BZSNRY_fake_script)()
+local function ELVWM_fake_script() -- Frame.MovingBorders 
+	local script = Instance.new('LocalScript', Frame)
 
 	local UIgradient = script.Parent.MovingColors.UIGradient
 	local runservice = game:GetService("RunService")
@@ -491,10 +398,10 @@ task.spawn(function()
 	runservice.RenderStepped:Connect(function()
 		UIgradient.Rotation +=2
 	end)
-end)
-
-task.spawn(function()
-	local script = tbl.UIDrag
+end
+coroutine.wrap(ELVWM_fake_script)()
+local function JHDMJHO_fake_script() -- Frame.UIDrag 
+	local script = Instance.new('LocalScript', Frame)
 
 	--// Services
 	local Players = game:GetService('Players')
@@ -553,10 +460,10 @@ task.spawn(function()
 			Holding = false
 		end
 	end)
-end)
-
-task.spawn(function()
-	local script = tbl.Script
+end
+coroutine.wrap(JHDMJHO_fake_script)()
+local function WLZX_fake_script() -- Frame_2.Script 
+	local script = Instance.new('Script', Frame_2)
 
 	local TweenService = game:GetService("TweenService")
 	local initialTween = TweenService:Create(script.Parent, TweenInfo.new(3.5), {Size = UDim2.new(0, 844, 0, 102)})
@@ -608,4 +515,5 @@ task.spawn(function()
 		end)
 	end)
 	
-end)
+end
+coroutine.wrap(WLZX_fake_script)()
