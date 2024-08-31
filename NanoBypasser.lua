@@ -281,6 +281,7 @@ TextLabel.TextWrapped = true
 MovingColors.Parent = Frame
 MovingColors.Color = Color3.fromRGB(255, 255, 255)
 MovingColors.Thickness = 15
+MovingColors.Name = "MovingColors"
 
 UIGradient.Parent = MovingColors
 
